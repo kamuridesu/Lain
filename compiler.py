@@ -4,37 +4,40 @@ import json
 import sys
 
 
-class Compiler:
+class Compiler: 
     def __init__(self, lang: str, data: str) -> None:
+        # TODO: Add support for other languages
         self.lang = lang
         self.data = data
         self.api_url = "https://wandbox.org/api/compile.ndjson"
         self.headers = {'Content-type': 'application/json'}
         self.output = ""
         self.supported_langs = [
-                    #'bash',
+                    'bash',
                     'c',
-                    #'csharp',
+                    'csharp',
                     'cpp',
-                    #'cs',
-                    #'go',
-                    #'golang',
-                    #'haskel',
-                    #'julia',
+                    'cs',
+                    'go',
+                    'golang',
+                    'haskel',
+                    'hs',
+                    'julia',
+                    'jl',
                     'java',
                     'js',
                     'javascript',
-                    #'lua',
+                    'lua',
                     'php',
-                    #'pascal',
-                    #'perl',
+                    'pascal',
+                    'pas',
+                    'perl',
                     'py',
                     'python',
-                    #'r',
-                    #'ruby',
+                    'r',
+                    'ruby',
                     'rust',
                     'rs',
-                    #'sql',
                     'typescript',
                     'ts',
                 ]
@@ -52,20 +55,20 @@ class Compiler:
 
     def parseResponse(self) -> bool:
         try:
-            std = ["stdout", "stderr", "compilermessagee"]
+            std = ["stdout", "stderr", "compilermessage"]
             data = self.output
             data = data.split("\n")
-            data = [json.loads(data[i]) for i in range(len(data) - 1)]
+            data = [json.loads(data[i]) for i in range(len(data) - 1)] # -1 to remove last empty line
             stdout = ""
             exit_code = ""
-            for x in data:
-                for k, v in x.items():
-                    if v.lower() in std:
-                        stdout += x['data']
-                    if v == "ExitCode":
-                        exit_code = x['data']
-            output = {"exit_code": exit_code, "body": stdout}
-            self.output = output
+            for x in data: # x is a dict
+                for k, v in x.items(): # k is a key, v is a value
+                    if v.lower() in std: # v is a stdout, stderr, or compilermessage
+                        stdout += x['data'] # x['data'] is the actual output
+                    if v == "ExitCode": # v is ExitCode
+                        exit_code = x['data'] # x['data'] is the exit code
+            output = {"exit_code": exit_code, "body": stdout} # output is a dict
+            self.output = output # self.output is a dict
             return True
         except Exception:
             return False
