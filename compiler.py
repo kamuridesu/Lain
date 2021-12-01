@@ -14,6 +14,7 @@ class Compiler:
         self.output = ""
         self.supported_langs = [
                     'bash',
+                    'sh',
                     'c',
                     'csharp',
                     'cpp',
@@ -55,7 +56,7 @@ class Compiler:
 
     def parseResponse(self) -> bool:
         try:
-            std = ["stdout", "stderr", "compilermessage"]
+            std = ["stdout", "stderr", "compilermessagee"]
             data = self.output
             data = data.split("\n")
             data = [json.loads(data[i]) for i in range(len(data) - 1)] # -1 to remove last empty line
@@ -66,7 +67,7 @@ class Compiler:
                     if v.lower() in std: # v is a stdout, stderr, or compilermessage
                         stdout += x['data'] # x['data'] is the actual output
                     if v == "ExitCode": # v is ExitCode
-                        exit_code = x['data'] # x['data'] is the exit code
+                        exit_code = int(x['data']) # x['data'] is the exit code
             output = {"exit_code": exit_code, "body": stdout} # output is a dict
             self.output = output # self.output is a dict
             return True

@@ -121,7 +121,7 @@ async def compilar(message: types.Message):
         success = comp.postData() # Post the data
         if success:
             res = comp.getResponse() # Get the response
-            response = ["✅", "❌"][res['exit_code'] == 0] + "Codigo executado\!" # Get the response
+            response = ["❌", "✅"][res['exit_code'] == 0] + "Codigo executado\!" # Get the response
             response += "\nSaida: \n\n```\n" + res['body']
             response += "\n```"
             return await bot.edit_message_text(text=response, chat_id=msg['chat']['id'], message_id=msg["message_id"], parse_mode="MarkdownV2") # Edit the message
@@ -140,7 +140,7 @@ async def pingme(message: types.Message):
     try: # Check if the user has a username
         username = message["from"]["username"]
     except Exception: # If not, get first_name
-        username = message["from"]["first_name"]
+        username = message["from"]["first_name"] 
     users = ping_users.UsersToPing() # Get the users to ping
     # users.clearFile()
     success = users.addUser(chat_id, username, user_id) # Add the user to the list
